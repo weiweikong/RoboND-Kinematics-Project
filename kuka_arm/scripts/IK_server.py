@@ -18,6 +18,28 @@ from geometry_msgs.msg import Pose
 from mpmath import *
 from sympy import *
 
+# Define functions for Rotation Matrices about x, y, and z given specific angle
+# From lesson 2 part 11
+def rot_x(q):
+    R_x = Matrix([[1,      0,       0], 
+                  [0, cos(q), -sin(q)],
+                  [0, sin(q),  cos(q)]])
+    
+    return R_x
+    
+def rot_y(q):              
+    R_y = Matrix([[ cos(q), 0, sin(q)],
+                  [      0, 1,      0],
+                  [-sin(q), 0, cos(q)]])
+    
+    return R_y
+
+def rot_z(q):    
+    R_z = Matrix([[cos(q), -sin(q), 0], 
+                  [sin(q),  cos(q), 0],
+                  [     0,       0, 1]])
+    
+    return R_z
 
 def handle_calculate_IK(req):
     rospy.loginfo("Received %s eef-poses from the plan" % len(req.poses))
@@ -48,8 +70,6 @@ def handle_calculate_IK(req):
                  alpha4:  pi/2, a4:      0, d5:     0,
                  alpha5: -pi/2, a5:      0, d6:     0,
                  alpha6:     0, a6:      0, d7: 0.303, q7:       0}
-
-
             
             # Define Modified DH Transformation matrix
                 # Total transform defined after individual transforms
@@ -133,22 +153,21 @@ def handle_calculate_IK(req):
                     req.poses[x].orientation.z, req.poses[x].orientation.w])
      
             # Calculate joint angles using Geometric IK method
-            # 1. Find T3_6 from orientation data (if R3_6 can be found directly then step 2 can be skipped)
+            # 1. Find R3_6 from orientation data
+            R3_6 = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
 
-            # 2. Pull rotation matrix from the transform
-
-            # 3. Find alpha, beta, gamma euler angles as done is lesson 2 part 8.
+            # 2. Find alpha, beta, gamma euler angles as done is lesson 2 part 8.
                 # alpha = theta4
                 # beta = theta5
                 # gamma = theta6
 
-            # 4. Find wrist center position using the end effector position and orientation
+            # 3. Find wrist center position using the end effector position and orientation
 
-            # 5. theta1 calc
+            # 4. theta1 calc
 
-            # 6. theta2 calc
+            # 5. theta2 calc
            
-            # 7. theta3 calc
+            # 6. theta3 calc
 		
 
 
