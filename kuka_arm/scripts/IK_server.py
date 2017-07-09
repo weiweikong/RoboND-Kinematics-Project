@@ -38,8 +38,7 @@ def handle_calculate_IK(req):
             a0, a1, a2, a3, a4, a5, a6 = symbols('a0:7')
             
             # Joint angle symbols
-
-
+                # Defined above with DH param symbols
       
             # Modified DH params
             s = {alpha0:     0, a0:      0, d1:  0.75,
@@ -53,8 +52,7 @@ def handle_calculate_IK(req):
 
             
             # Define Modified DH Transformation matrix
-
-
+                # Total transform defined after individual transforms
 
             # Create individual transformation matrices
             T0_1 = Matrix([[            cos(q1),            -sin(q1),            0,              a0],
@@ -135,7 +133,22 @@ def handle_calculate_IK(req):
                     req.poses[x].orientation.z, req.poses[x].orientation.w])
      
             # Calculate joint angles using Geometric IK method
+            # 1. Find T3_6 from orientation data (if R3_6 can be found directly then step 2 can be skipped)
 
+            # 2. Pull rotation matrix from the transform
+
+            # 3. Find alpha, beta, gamma euler angles as done is lesson 2 part 8.
+                # alpha = theta4
+                # beta = theta5
+                # gamma = theta6
+
+            # 4. Find wrist center position using the end effector position and orientation
+
+            # 5. theta1 calc
+
+            # 6. theta2 calc
+           
+            # 7. theta3 calc
 		
 
 
