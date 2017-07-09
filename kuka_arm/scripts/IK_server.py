@@ -153,6 +153,10 @@ def handle_calculate_IK(req):
                     req.poses[x].orientation.z, req.poses[x].orientation.w])
      
             # Calculate joint angles using Geometric IK method
+
+            # 0. Useful Constants
+            ee_length = d7
+            ee_length = ee_length.subs(s)
             # 1. Find R3_6 from orientation data
             R3_6 = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
 
@@ -165,6 +169,13 @@ def handle_calculate_IK(req):
             theta6 = atan2(R3_6[2,1], R3_6[2,2])
 
             # 3. Find wrist center position using the end effector position and orientation
+                # d6 = 0
+                # wx = px - (d6 + l) * nx
+                # wy = py - (d6 + l) * ny
+                # wz = pz - (d6 + l) * nz
+            wx = px - ee_length * [1, 0, 0]
+            wy = py - ee_length * [0, 1, 0]
+            wz = pz - ee_length * [0, 0, 1]
 
             # 4. theta1 calc
 
