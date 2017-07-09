@@ -156,10 +156,13 @@ def handle_calculate_IK(req):
             # 1. Find R3_6 from orientation data
             R3_6 = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
 
-            # 2. Find alpha, beta, gamma euler angles as done is lesson 2 part 8.
-                # alpha = theta4
-                # beta = theta5
-                # gamma = theta6
+            # 2. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
+            # alpha
+            theta4 = atan2(R3_6[1,0], R3_6[0,0])
+            # beta
+            theta5 = atan2(-R3_6[2,0], sqrt(R3_6[0,0] * R3_6[0,0] + R3_6[1,0] * R3_6[1,0]))
+            # gamma
+            theta6 = atan2(R3_6[2,1], R3_6[2,2])
 
             # 3. Find wrist center position using the end effector position and orientation
 
