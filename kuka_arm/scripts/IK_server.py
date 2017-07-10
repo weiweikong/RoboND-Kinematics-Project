@@ -157,6 +157,7 @@ def handle_calculate_IK(req):
             # 0. Useful Constants
             ee_length = d7
             ee_length = ee_length.subs(s)
+
             # 1. Find R3_6 from orientation data
             R3_6 = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
 
@@ -173,15 +174,24 @@ def handle_calculate_IK(req):
                 # wx = px - (d6 + l) * nx
                 # wy = py - (d6 + l) * ny
                 # wz = pz - (d6 + l) * nz
-            wx = px - ee_length * [1, 0, 0]
-            wy = py - ee_length * [0, 1, 0]
-            wz = pz - ee_length * [0, 0, 1]
+            wx = px - ee_length * [[1], [0], [0]]
+            wy = py - ee_length * [[0], [1], [0]]
+            wz = pz - ee_length * [[0], [0], [1]]
 
             # 4. theta1 calc
+            theta1 = atan2(wy, wx)
 
             # 5. theta2 calc
+            # Replace symbols with actual values
+            # theta2 = pi/2 - (acos((b**2 - a**2 - xc**2 - yc**2)/(-2*a*sqrt(xc**2 + yc**2))))
            
             # 6. theta3 calc
+            # Replace symbols with actual values
+            # theta3_a = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))),
+            #                         (xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))
+
+            # theta3_b = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))),
+            #                         (xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))
 		
 
 
