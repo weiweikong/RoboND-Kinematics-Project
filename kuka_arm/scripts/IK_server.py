@@ -157,6 +157,16 @@ def handle_calculate_IK(req):
             # 0. Useful Constants
             ee_length = d7
             ee_length = ee_length.subs(s)
+            # a = l2
+            l2_3 = s["a2"]
+            # b = l3 + l4 w/ adjustment
+            l3_4 = 0.96 # from URDF file
+            l4_5 = 0.54 # from URDF file
+            l3_4_offset = s["a3"]
+            l3_4_angle = asin(l3_4_offset / l3_4)
+            # Cosine rule
+            dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
+
 
             # 1. Find R3_6 from orientation data
             R_total = Matrix([[T_total[0,0], T_total[0,1], T_total[0,2]],
@@ -164,7 +174,8 @@ def handle_calculate_IK(req):
                               [T_total[2,0], T_total[2,1], T_total[2,2]]])
 
             R_rpy = R_total
-        
+            
+            # for a valid rotation matrix the transpose is == to the inverse 
             R3_6 = simplify(R0_3.T * R_rpy)
 
             # 2. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
@@ -188,16 +199,16 @@ def handle_calculate_IK(req):
             theta1 = atan2(wy, wx)
 
             # 5. theta2 calc
-            # Replace symbols with actual values
-            # theta2 = pi/2 - (acos((b**2 - a**2 - xc**2 - yc**2)/(-2*a*sqrt(xc**2 + yc**2))))
+            # xc, yc need to be adjusted
+            theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - xc**2 - yc**2)/(-2*l2_3*sqrt(xc**2 + yc**2))))
            
             # 6. theta3 calc
-            # Replace symbols with actual values
-            # theta3_a = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))),
-            #                         (xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))
+            # xc, yc need to be adjusted
+            theta3_a = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
+                                    (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 
-            # theta3_b = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))),
-            #                         (xc**2 + yc**2 - a**2 - b**2) / (-2*a*b))
+            theta3_a = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
+                                     (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 		
 
 
