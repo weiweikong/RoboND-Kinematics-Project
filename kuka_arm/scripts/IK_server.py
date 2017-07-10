@@ -159,7 +159,13 @@ def handle_calculate_IK(req):
             ee_length = ee_length.subs(s)
 
             # 1. Find R3_6 from orientation data
-            R3_6 = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
+            R_total = Matrix([[T_total[0,0], T_total[0,1], T_total[0,2]],
+                              [T_total[1,0], T_total[1,1], T_total[1,2]],
+                              [T_total[2,0], T_total[2,1], T_total[2,2]]])
+
+            R_rpy = R_total
+        
+            R3_6 = simplify(R0_3.T * R_rpy)
 
             # 2. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
             # alpha
