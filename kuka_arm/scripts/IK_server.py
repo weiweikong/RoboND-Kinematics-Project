@@ -166,6 +166,9 @@ def handle_calculate_IK(req):
             l3_4_angle = asin(l3_4_offset / l3_4)
             # Cosine rule
             dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
+            
+            J2_x = s["a1"]
+            J2_z = s["d1"]
 
 
             # 1. Find R3_6 from orientation data
@@ -200,6 +203,8 @@ def handle_calculate_IK(req):
 
             # 5. theta2 calc
             # xc, yc need to be adjusted
+            xc = wx - J2_x
+            yc = wz - J2_z
             theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - xc**2 - yc**2)/(-2*l2_3*sqrt(xc**2 + yc**2))))
            
             # 6. theta3 calc
