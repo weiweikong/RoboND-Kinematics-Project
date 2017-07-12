@@ -170,26 +170,7 @@ def handle_calculate_IK(req):
             J2_x = s["a1"]
             J2_z = s["d1"]
 
-
-            # 1. Find R3_6 from orientation data
-            R_total = Matrix([[T_total[0,0], T_total[0,1], T_total[0,2]],
-                              [T_total[1,0], T_total[1,1], T_total[1,2]],
-                              [T_total[2,0], T_total[2,1], T_total[2,2]]])
-
-            R_rpy = R_total
-            
-            # for a valid rotation matrix the transpose is == to the inverse 
-            R3_6 = simplify(R0_3.T * R_rpy)
-
-            # 2. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
-            # alpha
-            theta4 = atan2(R3_6[1,0], R3_6[0,0])
-            # beta
-            theta5 = atan2(-R3_6[2,0], sqrt(R3_6[0,0] * R3_6[0,0] + R3_6[1,0] * R3_6[1,0]))
-            # gamma
-            theta6 = atan2(R3_6[2,1], R3_6[2,2])
-
-            # 3. Find wrist center position using the end effector position and orientation
+            # 1. Find wrist center position using the end effector position and orientation
                 # d6 = 0
                 # wx = px - (d6 + l) * nx
                 # wy = py - (d6 + l) * ny
@@ -198,23 +179,43 @@ def handle_calculate_IK(req):
             wy = py - ee_length * [[0], [1], [0]]
             wz = pz - ee_length * [[0], [0], [1]]
 
-            # 4. theta1 calc
+            # 2. theta1 calc
             theta1 = atan2(wy, wx)
 
-            # 5. theta2 calc
+            # 3. theta2 calc
             # xc, yc need to be adjusted
             xc = wx - J2_x
             yc = wz - J2_z
             theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - xc**2 - yc**2)/(-2*l2_3*sqrt(xc**2 + yc**2))))
            
-            # 6. theta3 calc
+            # 4. theta3 calc
             # xc, yc need to be adjusted
-            theta3_a = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
+            theta3 = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
                                     (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 
-            theta3_a = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
-                                     (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
+            # Choose other theta3 calc
+            # theta3_b = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
+            #                          (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 		
+            # 5. Find R3_6 from orientation data
+            R_total = Matrix([[T_total[0,0], T_total[0,1], T_total[0,2]],
+                              [T_total[1,0], T_total[1,1], T_total[1,2]],
+                              [T_total[2,0], T_total[2,1], T_total[2,2]]])
+
+            R_rpy = R_total
+
+            R0_3 = R0_3.evalf(subs={q1: theta1, q2: theta2, q3: theta3})
+            
+            # for a valid rotation matrix the transpose is == to the inverse 
+            R3_6 = simplify(R0_3.T * R_rpy)
+
+            # 6. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
+            # alpha
+            theta4 = atan2(R3_6[1,0], R3_6[0,0])
+            # beta
+            theta5 = atan2(-R3_6[2,0], sqrt(R3_6[0,0] * R3_6[0,0] + R3_6[1,0] * R3_6[1,0]))
+            # gamma
+            theta6 = atan2(R3_6[2,1], R3_6[2,2])
 
 
             # Populate response for the IK request
