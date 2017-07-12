@@ -210,6 +210,13 @@ def handle_calculate_IK(req):
             R3_6 = simplify(R0_3.T * R_rpy)
 
             # 6. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
+
+            # Method using euler_from_matrix assuming an xyx rotation rather than a zyz rotation
+            # alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6, 'rxyx')
+            # theta4 = alpha
+            # theta5 = beta
+            # theta6 = gamma
+            
             # alpha
             theta4 = atan2(R3_6[1,0], R3_6[0,0])
             # beta
