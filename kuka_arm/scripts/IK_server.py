@@ -198,9 +198,13 @@ def handle_calculate_IK(req, test = 'no'):
             #                          (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 		
             # 5. Find R3_6 from orientation data
-            R_total = Matrix([[T_total[0,0], T_total[0,1], T_total[0,2]],
-                              [T_total[1,0], T_total[1,1], T_total[1,2]],
-                              [T_total[2,0], T_total[2,1], T_total[2,2]]])
+            # For this commented block to work we would have to already know theta1-6.
+            # since we don't know theta4-6 the total rotation has to be derived from
+            # roll, pitch, and yaw values given.
+            # R_total = Matrix([[T_total[0,0], T_total[0,1], T_total[0,2]],
+            #                   [T_total[1,0], T_total[1,1], T_total[1,2]],
+            #                   [T_total[2,0], T_total[2,1], T_total[2,2]]])
+            R_total = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
 
             R_rpy = R_total
 
