@@ -233,7 +233,7 @@ def handle_calculate_IK(req, test = 'no'):
 	    joint_trajectory_list.append(joint_trajectory_point)
 
         # Assemble variables if testing
-        if test = 'yes':
+        if test == 'yes':
             test_variables = {'px' : px, 'py' : py, 'pz' : pz, 'roll' : roll, 'pitch' : pitch, 'yaw' : yaw,
                               'wcx' : wx, 'wcy' : wy, 'wcz' : wz, 'theta1' : theta1, 'theta2' : theta2, 
                               'theta3' : theta3, 'theta4' : theta4, 'theta5' : theta5, 'theta6' : theta6 } 
