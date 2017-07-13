@@ -158,26 +158,32 @@ def handle_calculate_IK(req, test = 'no'):
             ee_length = d7
             ee_length = ee_length.subs(s)
             # a = l2
-            l2_3 = s["a2"]
+            l2_3 = s[a2]
             # b = l3 + l4 w/ adjustment
             l3_4 = 0.96 # from URDF file
             l4_5 = 0.54 # from URDF file
-            l3_4_offset = s["a3"]
+            l3_4_offset = s[a3]
             l3_4_angle = asin(l3_4_offset / l3_4)
             # Cosine rule
             dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
             
-            J2_x = s["a1"]
-            J2_z = s["d1"]
+            J2_x = s[a1]
+            J2_z = s[d1]
 
             # 1. Find wrist center position using the end effector position and orientation
                 # d6 = 0
                 # wx = px - (d6 + l) * nx
                 # wy = py - (d6 + l) * ny
                 # wz = pz - (d6 + l) * nz
+
+################### These calculations are causing an error ########################
+# "TypeError: can't multiply sequence by non-int or type 'Float'\n"
+
             wx = px - ee_length * [[1], [0], [0]]
             wy = py - ee_length * [[0], [1], [0]]
             wz = pz - ee_length * [[0], [0], [1]]
+
+###################################################################################
 
             # 2. theta1 calc
             theta1 = atan2(wy, wx)
