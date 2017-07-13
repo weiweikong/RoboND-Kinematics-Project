@@ -183,13 +183,11 @@ def handle_calculate_IK(req, test = 'no'):
             theta1 = atan2(wy, wx)
 
             # 3. theta2 calc
-            # xc, yc need to be adjusted
             xc = wx - J2_x
             yc = wz - J2_z
             theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - xc**2 - yc**2)/(-2*l2_3*sqrt(xc**2 + yc**2))))
            
             # 4. theta3 calc
-            # xc, yc need to be adjusted
             theta3 = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
                                     (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 
