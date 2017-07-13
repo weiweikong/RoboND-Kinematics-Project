@@ -158,42 +158,50 @@ def handle_calculate_IK(req, test = 'no'):
             ee_length = d7
             ee_length = ee_length.subs(s)
             # a = l2
-            l2_3 = s[a2]
+            l2_3 = a2
+            l2_3 = l2_3.subs(s)
             # b = l3 + l4 w/ adjustment
             l3_4 = 0.96 # from URDF file
             l4_5 = 0.54 # from URDF file
-            l3_4_offset = s[a3]
+            l3_4_offset = a3
+            l3_4_offset = l3_4_offset.subs(s)
             l3_4_angle = asin(l3_4_offset / l3_4)
             # Cosine rule
             dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
             
-            J2_x = s[a1]
-            J2_z = s[d1]
+            J2_x = a1
+            J2_x = J2_x.subs(s)
+            J2_z = d1
+            J2_z = J2_z.subs(s)
 
-            # 1. Find wrist center position using the end effector position and orientation
+            # 1. Find total rotation matrix from roll-pitch-yaw data
+            R_total = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
+
+            # 2. Find wrist center position using the end effector position and orientation
                 # d6 = 0
                 # wx = px - (d6 + l) * nx
                 # wy = py - (d6 + l) * ny
                 # wz = pz - (d6 + l) * nz
 
-################### These calculations are causing an error ########################
-# "TypeError: can't multiply sequence by non-int or type 'Float'\n"
+            ee_position = Matrix([[px],
+                                  [py],
+                                  [pz]])
 
-            wx = px - ee_length * [[1], [0], [0]]
-            wy = py - ee_length * [[0], [1], [0]]
-            wz = pz - ee_length * [[0], [0], [1]]
+            ee_adj = Matrix([[0],
+                             [0],
+                             [ee_length]])
 
-###################################################################################
+            w_c = ee_position - R_total * ee_adj 
 
-            # 2. theta1 calc
-            theta1 = atan2(wy, wx)
+            # 3. theta1 calc
+            theta1 = atan2(w_c[1,0], w_c[0,0])
 
-            # 3. theta2 calc
-            xc = wx - J2_x
-            yc = wz - J2_z
+            # 4. theta2 calc
+            xc = w_c[0,0] - J2_x
+            yc = w_c[2,0] - J2_z
             theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - xc**2 - yc**2)/(-2*l2_3*sqrt(xc**2 + yc**2))))
            
-            # 4. theta3 calc
+            # 5. theta3 calc
             theta3 = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
                                     (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 
@@ -201,23 +209,18 @@ def handle_calculate_IK(req, test = 'no'):
             # theta3_b = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
             #                          (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 		
-            # 5. Find R3_6 from orientation data
-            # For this commented block to work we would have to already know theta1-6.
-            # since we don't know theta4-6 the total rotation has to be derived from
-            # roll, pitch, and yaw values given.
-            # R_total = Matrix([[T_total[0,0], T_total[0,1], T_total[0,2]],
-            #                   [T_total[1,0], T_total[1,1], T_total[1,2]],
-            #                   [T_total[2,0], T_total[2,1], T_total[2,2]]])
-            R_total = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
+            # 6. Find R3_6 from orientation data
 
-            R_rpy = R_total
-
+            # R_rpy = R_total
+            R0_3 = Matrix([[T0_3[0,0], T0_3[0,1], T0_3[0,2]],
+                           [T0_3[1,0], T0_3[1,1], T0_3[1,2]],
+                           [T0_3[2,0], T0_3[2,1], T0_3[2,2]]])
             R0_3 = R0_3.evalf(subs={q1: theta1, q2: theta2, q3: theta3})
             
             # for a valid rotation matrix the transpose is == to the inverse 
-            R3_6 = simplify(R0_3.T * R_rpy)
+            R3_6 = simplify(R0_3.T * R_total)
 
-            # 6. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
+            # 7. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
 
             # Method using euler_from_matrix assuming an xyx rotation rather than a zyz rotation
             # alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6, 'rxyx')
