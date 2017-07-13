@@ -41,7 +41,7 @@ def rot_z(q):
     
     return R_z
 
-def handle_calculate_IK(req):
+def handle_calculate_IK(req, test = 'no'):
     rospy.loginfo("Received %s eef-poses from the plan" % len(req.poses))
     if len(req.poses) < 1:
         print "No valid poses received"
@@ -230,8 +230,16 @@ def handle_calculate_IK(req):
 	    joint_trajectory_point.positions = [theta1, theta2, theta3, theta4, theta5, theta6]
 	    joint_trajectory_list.append(joint_trajectory_point)
 
-        rospy.loginfo("length of Joint Trajectory List: %s" % len(joint_trajectory_list))
-        return CalculateIKResponse(joint_trajectory_list)
+        # Assemble variables if testing
+        if test = 'yes':
+            test_variables = {'px' : px, 'py' : py, 'pz' : pz, 'roll' : roll, 'pitch' : pitch, 'yaw' : yaw,
+                              'wcx' : wx, 'wcy' : wy, 'wcz' : wz, 'theta1' : theta1, 'theta2' : theta2, 
+                              'theta3' : theta3, 'theta4' : theta4, 'theta5' : theta5, 'theta6' : theta6 } 
+
+            return test_variables
+        else:
+            rospy.loginfo("length of Joint Trajectory List: %s" % len(joint_trajectory_list))
+            return CalculateIKResponse(joint_trajectory_list)
 
 
 def IK_server():
