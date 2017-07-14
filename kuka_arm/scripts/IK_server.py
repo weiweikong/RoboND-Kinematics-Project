@@ -224,17 +224,17 @@ def handle_calculate_IK(req, test = 'no'):
             # 7. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
 
             # Method using euler_from_matrix assuming an xyx rotation rather than a zyz rotation
-            # alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6, 'rxyx')
-            # theta4 = alpha
-            # theta5 = beta
-            # theta6 = gamma
+            alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6, 'rxyx')
+            theta4 = alpha
+            theta5 = beta
+            theta6 = gamma
             
             # alpha
-            theta4 = atan2(R3_6[1,0], R3_6[0,0])
+            # theta4 = atan2(R3_6[1,0], R3_6[0,0])
             # beta
-            theta5 = atan2(-R3_6[2,0], sqrt(R3_6[0,0] * R3_6[0,0] + R3_6[1,0] * R3_6[1,0]))
+            # theta5 = atan2(-R3_6[2,0], sqrt(R3_6[0,0] * R3_6[0,0] + R3_6[1,0] * R3_6[1,0]))
             # gamma
-            theta6 = atan2(R3_6[2,1], R3_6[2,2])
+            # theta6 = atan2(R3_6[2,1], R3_6[2,2])
 
 
             # Populate response for the IK request
