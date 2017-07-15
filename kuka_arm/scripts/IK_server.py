@@ -164,9 +164,9 @@ def handle_calculate_IK(req, test = 'no'):
             # b = l3 + l4 w/ adjustment
             l3_4 = 0.96 # from URDF file
             l4_5 = 0.54 # from URDF file
-            l3_4_offset = a3
+            l3_4_offset = abs(a3)
             l3_4_offset = l3_4_offset.subs(s)
-            l3_4_angle = asin(l3_4_offset / l3_4)
+            l3_4_angle = pi - asin(l3_4_offset / l3_4)
             # Cosine rule
             dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
             
