@@ -170,11 +170,6 @@ def handle_calculate_IK(req, test = 'no'):
             # Cosine rule
             dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
             
-            J2_x = a1
-            J2_x = J2_x.subs(s)
-            J2_z = d1
-            J2_z = J2_z.subs(s)
-
             # 1. Find total rotation matrix from roll-pitch-yaw data
             R_total = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
 
@@ -198,13 +193,24 @@ def handle_calculate_IK(req, test = 'no'):
             theta1 = atan2(w_c[1,0], w_c[0,0])
 
             # 4. theta2 calc
-            xc = w_c[0,0] - J2_x
-            yc = w_c[2,0] - J2_z
-            theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - xc**2 - yc**2)/(-2*l2_3*sqrt(xc**2 + yc**2))))
+            J2_x = a1 * cos(theta1)
+            J2_x = J2_x.subs(s)
+            J2_y = a1 * sin(theta1)
+            J2_y = J2_y.subs(s)
+            J2_z = d1
+            J2_z = J2_z.subs(s)
+            J5_x = w_c[0,0]
+            J5_y = w_c[1,0]
+            J5_z = w_c[2,0]
+
+            dist_J2_J5 = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2 + (J5_z - J2_z)**2)
+            dist_J2_J5_xy = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2)
+
+            theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) + acos(dist_J2_J5_xy/dist_J2_J5)
            
             # 5. theta3 calc
-            theta3 = pi/2 - atan2(sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
-                                    (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
+            theta3 = pi/2 - atan2(sqrt(1 - ((dist_J2_J5**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
+                                    (dist_J2_J5**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
 
             # Choose other theta3 calc
             # theta3_b = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
