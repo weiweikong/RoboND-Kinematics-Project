@@ -236,7 +236,7 @@ def test_code(test_case):
 
         acos_innards = (dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5)
         print("acos innards = ", acos_innards)
-        theta2 = (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) + acos(dist_J2_J5_xy/dist_J2_J5) 
+        theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - acos(dist_J2_J5_xy/dist_J2_J5) 
         print("theta2 = ", theta2)
            
         # 5. theta3 calc
