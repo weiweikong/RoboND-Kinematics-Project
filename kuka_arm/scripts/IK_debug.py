@@ -4,6 +4,7 @@ from time import time
 from mpmath import radians
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from IK_server import rot_x, rot_y, rot_z
+from FK import forward_kinematics
 import tf
 
 
@@ -26,7 +27,11 @@ test_cases = {1:[[[2.16135,-1.42635,1.55109],
                   [0.01735,-0.2179,0.9025,0.371016]],
                   [-1.1669,-0.17989,0.85137],
                   [-2.99,-0.12,0.94,4.06,1.29,-4.12]],
-              4:[],
+              # Initial position of the arm
+              4:[[[2.153, 0.0, 1.946],
+                  [0.0, 0.0, 0.0, 1.0]],
+                  [1.85, 0.0, 1.946],
+                  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]],
               5:[]}
 
 
@@ -228,13 +233,10 @@ def test_code(test_case):
 
         dist_J2_J5 = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2 + (J5_z - J2_z)**2)
         dist_J2_J5_xy = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2)
-        xc = w_c[0,0] - J2_x
-        yc = w_c[2,0] - J2_z
-        print("xc = ", xc)
-        print("yc = ", yc)
+
         acos_innards = (dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5)
         print("acos innards = ", acos_innards)
-        theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) + acos(dist_J2_J5_xy/dist_J2_J5) 
+        theta2 = (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) + acos(dist_J2_J5_xy/dist_J2_J5) 
         print("theta2 = ", theta2)
            
         # 5. theta3 calc
@@ -282,13 +284,14 @@ def test_code(test_case):
     ## as the input and output the position of your end effector as your_ee = [x,y,z]
 
     ## (OPTIONAL) YOUR CODE HERE!
+    calc_wc, calc_ee = forward_kinematics(theta1, theta2, theta3, theta4, theta5, theta6)
 
     ## End your code input for forward kinematics here!
     ########################################################################################
 
     ## For error analysis please set the following variables of your WC location and EE location in the format of [x,y,z]
-    your_wc = [1,1,1] # <--- Load your calculated WC values in this array
-    your_ee = [1,1,1] # <--- Load your calculated end effector value from your forward kinematics
+    your_wc = [calc_wc[0,0], calc_wc[1,0], calc_wc[2,0]] # <--- Load your calculated WC values in this array
+    your_ee = [calc_ee[0,0], calc_ee[1,0], calc_ee[2,0]] # <--- Load your calculated end effector value from your forward kinematics
     ########################################################################################
 
     ## Error analysis
