@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \graphicspath{ {writeupimages/} }
 \usepackage{float}
+\usepackage{amsmath}
 
 \titleformat{\section}
 {\Large\bfseries}
@@ -77,7 +78,7 @@ Using the reference frames the Denavit-Hartenberg parameters can be defined. For
     \item Joint angle: angle between $\hat{X}_{i-1}$ and $\hat{X}_i$ measured about $\hat{Z}_i$ in a right hand sense.
 \end{itemize}
 
-\begin{table}
+\begin{table}[H]
 \centering
 \begin{tabular}{|c|r|c|c|l|}
     \hline
@@ -95,6 +96,17 @@ Using the reference frames the Denavit-Hartenberg parameters can be defined. For
 \end{table}
 
 \subsection{2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base\_link and gripper\_link using only end-effector(gripper) pose.}
+
+The general form of a homogeneous transform between two reference frames described using our convention can be written as follows:
+\[
+\begin{bmatrix}
+    \cos(\theta _i) & -\sin(\theta _i) & 0 & a_{i-1} \\
+    \sin(\theta _i)\cos(\alpha _{i-1}) & \cos(\theta _i)\cos(\alpha _{i-1}) & -\sin(\alpha _{i-1}) & -\sin(\alpha _{i-1})d_i \\
+    \sin(\theta _i)\sin(\alpha _{i-1}) & \cos(\theta _i)\sin(\alpha _{i-1}) & \cos(\alpha _{i-1}) & \cos(\alpha _{i-1})d_i \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
 
 \subsection{3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.}
 
