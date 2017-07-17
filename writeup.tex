@@ -200,33 +200,34 @@ The total transform can then be described as:
 
 
 \subsection{3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.}
+Because the axes of joints 4, 5, and 6 intersect at a single point, the position and orientation of the end effector are kinematically decoupled. Joints 4, 5, and 6 form a spherical wrist that determine the orientation of the end effector, while joints 1, 2 and 3 determine the location of the end effector.
 
-\subsubsection{Theta 1}
+\subsubsection{Joint 1 - $\theta _1$}
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{theta1.png}
     \caption{Diagram for calculating theta 1.}
     \label{fig:theta3}
 \end{figure}
 
-\subsubsection{Theta 2}
+\subsubsection{Joint 2 - $\theta _2$}
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{theta2.png}
     \caption{Diagram for calculating theta 2.}
     \label{fig:theta3}
 \end{figure}
 
-\subsubsection{Theta 3}
+\subsubsection{Joint 3 - $\theta _3$}
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{theta3.png}
     \caption{Diagram for calculating theta 3.}
     \label{fig:theta3}
 \end{figure}
 
-\subsubsection{Theta 4}
+\subsubsection{Joint 4 - $\theta _4$}
 
-\subsubsection{Theta 5}
+\subsubsection{Joint 5 - $\theta _5$}
 
-\subsubsection{Theta 6}
+\subsubsection{Joint 6 - $\theta _6$}
 
 \section{Project Implementation}
 
