@@ -80,16 +80,16 @@ Using the reference frames the Denavit-Hartenberg parameters can be defined. For
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|c|r|c|c|l|}
+\begin{tabular}{|c|c|r|c|c|l|}
     \hline
-    Transform & $\alpha _{i-1}$ & $a_{i-1}$ & $d_i$ & $\theta _i$ \\ \hline
-    $T_1^0$ & 0 & 0 & 0.75 & $\theta _1$ \\ \hline
-    $T_2^1$ & $-\frac{\pi}{2}$ & 0.35 & 0 & $\theta _2 - \frac{\pi}{2}$ \\ \hline
-    $T_3^2$ & 0 & 1.25 & 0 & $\theta _3$ \\ \hline
-    $T_4^3$ & $-\frac{\pi}{2}$ & -0.054 & 1.5 & $\theta _4$ \\ \hline
-    $T_5^4$ & $\frac{\pi}{2}$ & 0 & 0 & $\theta _5$ \\ \hline
-    $T_6^5$ & $-\frac{\pi}{2}$ & 0 & 0 & $\theta _6$ \\ \hline
-    $T_G^6$ & 0 & 0 & 0.303 & 0 \\ \hline
+    i & Transform & $\alpha _{i-1}$ & $a_{i-1}$ & $d_i$ & $\theta _i$ \\ \hline
+    1 & $T_1^0$ & 0 & 0 & 0.75 & $\theta _1$ \\ \hline
+    2 & $T_2^1$ & $-\frac{\pi}{2}$ & 0.35 & 0 & $\theta _2 - \frac{\pi}{2}$ \\ \hline
+    3 & $T_3^2$ & 0 & 1.25 & 0 & $\theta _3$ \\ \hline
+    4 & $T_4^3$ & $-\frac{\pi}{2}$ & -0.054 & 1.5 & $\theta _4$ \\ \hline
+    5 & $T_5^4$ & $\frac{\pi}{2}$ & 0 & 0 & $\theta _5$ \\ \hline
+    6 & $T_6^5$ & $-\frac{\pi}{2}$ & 0 & 0 & $\theta _6$ \\ \hline
+    7 & $T_G^6$ & 0 & 0 & 0.303 & 0 \\ \hline
 
 \end{tabular}
 \caption{\label{tab:table-name}Denavit-Hartenberg parameter table with values derived from the URDF file}
@@ -98,7 +98,7 @@ Using the reference frames the Denavit-Hartenberg parameters can be defined. For
 \subsection{2. Using the DH parameter table you derived earlier, create individual transformation matrices about each joint. In addition, also generate a generalized homogeneous transform between base\_link and gripper\_link using only end-effector(gripper) pose.}
 
 The general form of a homogeneous transform between two reference frames described using our convention can be written as follows:
-\[
+\[T_{i-1}^i =
 \begin{bmatrix}
     \cos(\theta _i) & -\sin(\theta _i) & 0 & a_{i-1} \\
     \sin(\theta _i)\cos(\alpha _{i-1}) & \cos(\theta _i)\cos(\alpha _{i-1}) & -\sin(\alpha _{i-1}) & -\sin(\alpha _{i-1})d_i \\
@@ -107,6 +107,97 @@ The general form of a homogeneous transform between two reference frames describ
 
 \end{bmatrix}
 \]
+From this equation the individual transform matrices can be derived.
+\[T_{1}^0 =
+\begin{bmatrix}
+    \cos(\theta _1) & -\sin(\theta _1) & 0 & a_{0} \\
+    \sin(\theta _1)\cos(\alpha _{0}) & \cos(\theta _1)\cos(\alpha _{0}) & -\sin(\alpha _{0}) & -\sin(\alpha _{0})d_1 \\
+    \sin(\theta _1)\sin(\alpha _{0}) & \cos(\theta _1)\sin(\alpha _{0}) & \cos(\alpha _{0}) & \cos(\alpha _{0})d_1 \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
+\[T_{2}^1 =
+\begin{bmatrix}
+    \cos(\theta _2) & -\sin(\theta _2) & 0 & a_{1} \\
+    \sin(\theta _2)\cos(\alpha _{1}) & \cos(\theta _2)\cos(\alpha _{1}) & -\sin(\alpha _{1}) & -\sin(\alpha _{1})d_2 \\
+    \sin(\theta _2)\sin(\alpha _{1}) & \cos(\theta _2)\sin(\alpha _{1}) & \cos(\alpha _{1}) & \cos(\alpha _{1})d_2 \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
+\[T_{3}^2 =
+\begin{bmatrix}
+    \cos(\theta _3) & -\sin(\theta _3) & 0 & a_{2} \\
+    \sin(\theta _3)\cos(\alpha _{2}) & \cos(\theta _3)\cos(\alpha _{2}) & -\sin(\alpha _{2}) & -\sin(\alpha _{2})d_3 \\
+    \sin(\theta _3)\sin(\alpha _{2}) & \cos(\theta _3)\sin(\alpha _{2}) & \cos(\alpha _{2}) & \cos(\alpha _{2})d_3 \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
+\[T_{4}^3 =
+\begin{bmatrix}
+    \cos(\theta _4) & -\sin(\theta _4) & 0 & a_{3} \\
+    \sin(\theta _4)\cos(\alpha _{3}) & \cos(\theta _4)\cos(\alpha _{3}) & -\sin(\alpha _{3}) & -\sin(\alpha _{3})d_4 \\
+    \sin(\theta _4)\sin(\alpha _{3}) & \cos(\theta _4)\sin(\alpha _{3}) & \cos(\alpha _{3}) & \cos(\alpha _{3})d_4 \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
+\[T_{5}^4 =
+\begin{bmatrix}
+    \cos(\theta _5) & -\sin(\theta _5) & 0 & a_{4} \\
+    \sin(\theta _5)\cos(\alpha _{4}) & \cos(\theta _5)\cos(\alpha _{4}) & -\sin(\alpha _{4}) & -\sin(\alpha _{4})d_5 \\
+    \sin(\theta _5)\sin(\alpha _{4}) & \cos(\theta _5)\sin(\alpha _{4}) & \cos(\alpha _{4}) & \cos(\alpha _{4})d_5 \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
+\[T_{6}^5 =
+\begin{bmatrix}
+    \cos(\theta _6) & -\sin(\theta _6) & 0 & a_{5} \\
+    \sin(\theta _6)\cos(\alpha _{5}) & \cos(\theta _6)\cos(\alpha _{5}) & -\sin(\alpha _{5}) & -\sin(\alpha _{5})d_6 \\
+    \sin(\theta _6)\sin(\alpha _{5}) & \cos(\theta _6)\sin(\alpha _{5}) & \cos(\alpha _{5}) & \cos(\alpha _{5})d_6 \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
+\[T_{G}^6 = T_7^6 =
+\begin{bmatrix}
+    \cos(\theta _7) & -\sin(\theta _7) & 0 & a_{6} \\
+    \sin(\theta _7)\cos(\alpha _{6}) & \cos(\theta _7)\cos(\alpha _{6}) & -\sin(\alpha _{6}) & -\sin(\alpha _{6})d_7 \\
+    \sin(\theta _7)\sin(\alpha _{6}) & \cos(\theta _7)\sin(\alpha _{6}) & \cos(\alpha _{6}) & \cos(\alpha _{6})d_7 \\
+    0 & 0 & 0 & 1
+
+\end{bmatrix}
+\]
+
+The total homogeneous transform between the base link and the end link can be found by multiplying the individual transforms together
+\[T_G^0 = T_1^0 * T_2^1 * T_3^2 * T_4^3 * T_5^4 * T_6^5 * T_G^6 \]
+
+Because of the difference in the way the orientation of the DH frames are defined versus the way the URDF file is written, two additional rotations must be applied to the gripper frame: a 180 degree rotation about the z-axis, followed by a -90 degree rotation about the y-axis.
+
+\[R_z = 
+\begin{bmatrix}
+    \cos(\pi) & -\sin(\pi) & 0 & 0 \\
+    \sin(\pi) & \cos(\pi) & 0 & 0 \\
+    0 & 0 & 1 & 0 \\
+    0 & 0 & 0 & 1
+\end{bmatrix}
+\]
+
+\[R_y = 
+\begin{bmatrix}
+    \cos(-\frac{\pi}{2}) & 0 & \sin(-\frac{\pi}{2}) & 0 \\
+    0 & 1 & 0 & 0 \\
+    -\sin(-\frac{\pi}{2}) & 0 & \cos(-\frac{\pi}{2}) & 0 \\
+   0 & 0 & 0 & 1
+\end{bmatrix}
+\]
+
+The total transform can then be described as:
+\[T_{total} = T_G^0 * R_z * R_y \]
+
 
 \subsection{3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.}
 
