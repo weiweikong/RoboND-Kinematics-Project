@@ -202,21 +202,68 @@ The total transform can then be described as:
 \subsection{3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.}
 Because the axes of joints 4, 5, and 6 intersect at a single point, the position and orientation of the end effector are kinematically decoupled. Joints 4, 5, and 6 form a spherical wrist that determine the orientation of the end effector, while joints 1, 2 and 3 determine the location of the end effector.
 
-\subsubsection{Joint 1 - $\theta _1$}
+\subsubsection{End Effector Position}
+
+\paragraph{Wrist Center Position}
+
+The first step for finding the first three joint angles is to use the end effector position that is passed to the inverse kinematics server to find the location of the wrist center. Because the wrist center is located at joint five, it can be found by starting at the end effector location and subtracting the link length from joint five to joint 6 and from joint 6 to the end effector along the $Z_G$ axis as shown in figure \ref{fig:RFscheme}.
+This can be written mathematically as follows:
+
+\[
+\begin{bmatrix}
+    w_x \\
+    w_y \\
+    w_z
+\end{bmatrix}
+=
+\begin{bmatrix}
+    p_x \\
+    p_y \\
+    p_z
+\end{bmatrix}
+-
+\begin{bmatrix}
+    d_6 + d_7 \\
+    d_6 + d_7 \\
+    d_6 + d_7
+\end{bmatrix}
+*
+\begin{bmatrix}
+    n_x \\
+    n_y \\
+    n_z \\
+\end{bmatrix}    
+\]
+Where:
+\begin{itemize}
+    \item w = wrist center location
+    \item p = end effector location
+    \item n = the vector on the $Z_G$ axis
+\end{itemize}
+
+\paragraph{Joint 1 - $\theta _1$}
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{theta1.png}
     \caption{Diagram for calculating theta 1.}
     \label{fig:theta3}
 \end{figure}
+\begin{itemize}
+    \item EE = end effector
+    \item WC = wrist center
+    \item $X_c$ = X component of wrist center position
+    \item $Y_c$ = Y component of wrist center position
+\end{itemize}
+Once the wrist center location is known, $\theta _1$ can be found by using the projection of the wrist center onto the XY plane. $\theta _1$ is the arctangent of the X and Y components of the wrist center position.
+\[\theta _1 = atan2(Y_c, X_c)\]
 
-\subsubsection{Joint 2 - $\theta _2$}
+\paragraph{Joint 2 - $\theta _2$}
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{theta2.png}
     \caption{Diagram for calculating theta 2.}
     \label{fig:theta3}
 \end{figure}
 
-\subsubsection{Joint 3 - $\theta _3$}
+\paragraph{Joint 3 - $\theta _3$}
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{theta3.png}
     \caption{Diagram for calculating theta 3.}
