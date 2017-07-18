@@ -143,6 +143,8 @@ def test_code(test_case):
     T0_6 = simplify(T0_5 * T5_6)
     T0_G = simplify(T0_6 * T6_G)
 
+    print(T0_G)
+
     # Correct orientation of gripper link in URDF vs. DH convention
     # 180 degree rotation about the z-axis
     R_z = Matrix([[cos(pi), -sin(pi), 0, 0],
@@ -158,6 +160,7 @@ def test_code(test_case):
 	
     # Total transform with gripper orientation corrected
     T_total = simplify(T0_G * R_corr) 
+    print(T_total)
 
 
     for x in xrange(0, len(req.poses)):
@@ -171,14 +174,10 @@ def test_code(test_case):
         py = req.poses[x].position.y
         pz = req.poses[x].position.z
         
-        print("px = %f, py = %f, pz = %f", px, py, pz)
-
         (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(
             [req.poses[x].orientation.x, req.poses[x].orientation.y,
                 req.poses[x].orientation.z, req.poses[x].orientation.w])
 
-        print("roll = %f, pitch = %f, yaw = %f", roll, pitch, yaw)
-     
         # Calculate joint angles using Geometric IK method
 
         # 0. Useful Constants
@@ -195,7 +194,6 @@ def test_code(test_case):
         l3_4_angle = pi - asin(l3_4_offset / l3_4)
         # Cosine rule
         dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
-        print("dist3_5 = %f", dist3_5)
             
         # 1. Find total rotation matrix from roll-pitch-yaw data
         R_total = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
@@ -218,7 +216,6 @@ def test_code(test_case):
 
         # 3. theta1 calc
         theta1 = atan2(w_c[1,0], w_c[0,0])
-        print("theta1 = ", theta1)
 
         # 4. theta2 calc
         J2_x = a1 * cos(theta1)
@@ -230,13 +227,15 @@ def test_code(test_case):
         J5_x = w_c[0,0]
         J5_y = w_c[1,0]
         J5_z = w_c[2,0]
+        J5_2_z = J5_z - J2_z
 
         dist_J2_J5 = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2 + (J5_z - J2_z)**2)
         dist_J2_J5_xy = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2)
 
         acos_innards = (dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5)
         print("acos innards = ", acos_innards)
-        theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - acos(dist_J2_J5_xy/dist_J2_J5) 
+        # theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - acos(dist_J2_J5_xy/dist_J2_J5) 
+        theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - atan2(J5_2_z, dist_J2_J5_xy)
         print("theta2 = ", theta2)
            
         # 5. theta3 calc
@@ -262,17 +261,17 @@ def test_code(test_case):
         # 7. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
 
         # Method using euler_from_matrix assuming an xyx rotation rather than an xyz rotation
-        # alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6.tolist(), 'rxyx')
-        # theta4 = alpha
-        # theta5 = beta
-        # theta6 = gamma
+        alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6.tolist(), 'rxyx')
+        theta4 = alpha
+        theta5 = beta
+        theta6 = gamma
             
         # alpha
-        theta4 = atan2(R3_6[1,0], R3_6[0,0])
+        # theta4 = atan2(R3_6[1,0], R3_6[0,0])
         # beta
-        theta5 = atan2(-R3_6[2,0], sqrt(R3_6[0,0] * R3_6[0,0] + R3_6[1,0] * R3_6[1,0]))
+        # theta5 = atan2(-R3_6[2,0], sqrt(R3_6[0,0] * R3_6[0,0] + R3_6[1,0] * R3_6[1,0]))
         # gamma
-        theta6 = atan2(R3_6[2,1], R3_6[2,2])
+        # theta6 = atan2(R3_6[2,1], R3_6[2,2])
 
 
 
@@ -342,6 +341,6 @@ def test_code(test_case):
 
 if __name__ == "__main__":
     # Change test case number for different scenarios
-    test_case_number = 1
+    test_case_number = 4
 
 test_code(test_cases[test_case_number])
