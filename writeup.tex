@@ -202,7 +202,7 @@ The total transform can then be described as:
 \subsection{3. Decouple Inverse Kinematics problem into Inverse Position Kinematics and inverse Orientation Kinematics; doing so derive the equations to calculate all individual joint angles.}
 Because the axes of joints 4, 5, and 6 intersect at a single point, the position and orientation of the end effector are kinematically decoupled. Joints 4, 5, and 6 form a spherical wrist that determine the orientation of the end effector, while joints 1, 2 and 3 determine the location of the end effector.
 
-\subsubsection{End Effector Position}
+\subsubsection{Inverse Position}
 
 \paragraph{Wrist Center Position}
 
@@ -270,11 +270,13 @@ Once the wrist center location is known, $\theta _1$ can be found by using the p
     \label{fig:theta3}
 \end{figure}
 
-\subsubsection{Joint 4 - $\theta _4$}
+\subsubsection{Inverse Orientation}
 
-\subsubsection{Joint 5 - $\theta _5$}
+\paragraph{Joint 4 - $\theta _4$}
 
-\subsubsection{Joint 6 - $\theta _6$}
+\paragraph{Joint 5 - $\theta _5$}
+
+\paragraph{Joint 6 - $\theta _6$}
 
 \section{Project Implementation}
 
