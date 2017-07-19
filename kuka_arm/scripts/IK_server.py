@@ -171,7 +171,7 @@ def handle_calculate_IK(req, test = 'no'):
             dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
             
             # 1. Find total rotation matrix from roll-pitch-yaw data
-            R_total = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
+            R_total = simplify(rot_z(yaw) * rot_y(pitch) * rot_x(roll))
 
             # 2. Find wrist center position using the end effector position and orientation
                 # d6 = 0
