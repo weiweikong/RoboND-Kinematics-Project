@@ -183,9 +183,9 @@ def handle_calculate_IK(req, test = 'no'):
                                   [py],
                                   [pz]])
 
-            ee_adj = Matrix([[0],
+            ee_adj = Matrix([[ee_length],
                              [0],
-                             [ee_length]])
+                             [0]])
 
             w_c = ee_position - R_total * ee_adj 
 
