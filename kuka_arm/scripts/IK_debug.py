@@ -143,8 +143,6 @@ def test_code(test_case):
     T0_6 = simplify(T0_5 * T5_6)
     T0_G = simplify(T0_6 * T6_G)
 
-    print(T0_G)
-
     # Correct orientation of gripper link in URDF vs. DH convention
     # 180 degree rotation about the z-axis
     R_z = Matrix([[cos(pi), -sin(pi), 0, 0],
@@ -160,8 +158,6 @@ def test_code(test_case):
 	
     # Total transform with gripper orientation corrected
     T_total = simplify(T0_G * R_corr) 
-    print(T_total)
-
 
     for x in xrange(0, len(req.poses)):
         # IK code starts here
@@ -208,9 +204,9 @@ def test_code(test_case):
                               [py],
                               [pz]])
 
-        ee_adj = Matrix([[0],
+        ee_adj = Matrix([[ee_length],
                          [0],
-                         [ee_length]])
+                         [0]])
 
         w_c = ee_position - R_total * ee_adj 
 
@@ -283,14 +279,17 @@ def test_code(test_case):
     ## as the input and output the position of your end effector as your_ee = [x,y,z]
 
     ## (OPTIONAL) YOUR CODE HERE!
-    calc_wc, calc_ee = forward_kinematics(theta1, theta2, theta3, theta4, theta5, theta6)
+    # calc_wc, calc_ee = forward_kinematics(theta1, theta2, theta3, theta4, theta5, theta6)
 
     ## End your code input for forward kinematics here!
     ########################################################################################
 
     ## For error analysis please set the following variables of your WC location and EE location in the format of [x,y,z]
-    your_wc = [calc_wc[0,0], calc_wc[1,0], calc_wc[2,0]] # <--- Load your calculated WC values in this array
-    your_ee = [calc_ee[0,0], calc_ee[1,0], calc_ee[2,0]] # <--- Load your calculated end effector value from your forward kinematics
+    # your_wc = [calc_wc[0,0], calc_wc[1,0], calc_wc[2,0]] # <--- load your calculated wc values in this array
+    # your_ee = [calc_ee[0,0], calc_ee[1,0], calc_ee[2,0]] # <--- load your calculated end effector value from your forward kinematics
+    # Load derived wc & ee positions directly
+    your_wc = [w_c[0,0], w_c[1,0], w_c[2,0]] # <--- load your calculated wc values in this array
+    your_ee = [px, py, pz] # <--- load your calculated end effector value from your forward kinematics
     ########################################################################################
 
     ## Error analysis
@@ -341,6 +340,6 @@ def test_code(test_case):
 
 if __name__ == "__main__":
     # Change test case number for different scenarios
-    test_case_number = 4
+    test_case_number = 1
 
 test_code(test_cases[test_case_number])
