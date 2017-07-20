@@ -262,6 +262,11 @@ Once the wrist center location is known, $\theta _1$ can be found by using the p
     \caption{Diagram for calculating theta 2.}
     \label{fig:theta3}
 \end{figure}
+\begin{figure}[H]
+    \includegraphics[width=\linewidth]{offsetangle.png}
+    \caption{Diagram for calculating the length of $b$.}
+    \label{fig:offsetangle}
+\end{figure}
 \begin{itemize}
     \item $a$ = link length from joint 2 to joint 3
     \item $b$ = straight line distance between joint 3 and joint 5
@@ -273,11 +278,15 @@ Once the wrist center location is known, $\theta _1$ can be found by using the p
     \item $a3$ = the vertical offset between joint 3 and joint 4
     \item $\beta$ = the angle between $a$ and $c$
     \item $\delta$ = the angle between $c$ and $f$
+    \item $B$ = the angle between $d$ and $e$
+    \item $\phi$ = the offset angle caused by a3
 \end{itemize}
 
-
-$a, d, e,$ and $a3$ are all from the DH parameter table.
-The calculation for $b$ is shown in the $\theta _3$ section. \\
+$a, d, e,$ and $a3$ are all from the DH parameter table. \\
+Using figure \ref{fig:offsetangle}, b can be calculated as follows:
+\[\phi = asin\bigg(\frac{a3}{d}\bigg)\]
+\[B = \pi - \phi\]
+\[b = \sqrt{d^2 + e^2 -2de\cos(B)}\]
 Since the position of J5 is known after finding the wrist center and the position of J2 can be calculated using the DH parameter table and rotating by $\theta _1$, c can be found by taking the distance between the two points:
 \[c = \sqrt{(J5_x - J2_x)^2 + (J5_y - J2_y)^2 + (J5_z - J2_z)^2}\]
 $f$ can be found by removing the Z term from the $c$ equation:
@@ -285,7 +294,7 @@ $f$ can be found by removing the Z term from the $c$ equation:
 $g$ is simply the distance between two points on the Z axis:
 \[g = J5_z - J2_z\]
 $\beta$ can be found using the law of cosines because the lengths of all three sides of the triangle $abc$ are known:
-\[\beta = acos(\frac{b^2 - a^2 - c^2}{-2 * a * c})\]
+\[\beta = acos\bigg(\frac{b^2 - a^2 - c^2}{-2ac}\bigg)\]
 since $g$ and $f$ are known, $\delta$ can be found using the arctangent:
 \[\delta = atan2(g,f)\]
 because the sum of $\theta _2$, $\beta$ and $\delta$ forms a right angle, $\theta _2$ can be written as:
@@ -297,6 +306,24 @@ because the sum of $\theta _2$, $\beta$ and $\delta$ forms a right angle, $\thet
     \caption{Diagram for calculating theta 3.}
     \label{fig:theta3}
 \end{figure}
+\begin{itemize}
+    \item $a$ = link length from joint 2 to joint 3
+    \item $b$ = straight line distance between joint 3 and joint 5
+    \item $c$ = straight line distance between joint 2 and joint 5
+    \item $d$ = link length from joint 3 to joint 4
+    \item $e$ = link length from joint 4 to joint 5
+    \item $a3$ = the vertical offset between joint 3 and joint 4
+    \item $\alpha$ = the angle between $b$ and $c$
+    \item $\beta$ = the angle between $a$ and $c$
+    \item $\gamma$ = the angle between $a$ and $b$
+    \item $\delta$ = the angle between $b$ and the Y axis of joint 3
+\end{itemize}
+$a, d, e,$ and $a3$ are all from the DH parameter table. \\
+$b$ and $c$ are calculated the same way as in the $\theta _2$ calculation. \\
+Because all side lengths of the triangle $abc$ are known, $\gamma$ can be found using the law of cosines:
+\[\gamma = acos\bigg(\frac{c^2 - a^2 - b^2}{-2ab}\bigg)\]
+\[\delta = asin\bigg(\frac{a3}{b}\bigg)\]
+\[\theta _3 = \frac{\pi}{2} - \delta - \gamma\]
 
 \subsubsection{Inverse Orientation}
 
