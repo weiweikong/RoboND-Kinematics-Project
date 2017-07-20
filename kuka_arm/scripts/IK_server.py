@@ -202,11 +202,12 @@ def handle_calculate_IK(req, test = 'no'):
             J5_x = w_c[0,0]
             J5_y = w_c[1,0]
             J5_z = w_c[2,0]
+            J5_2_z = J5_z - J2_z
 
             dist_J2_J5 = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2 + (J5_z - J2_z)**2)
             dist_J2_J5_xy = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2)
 
-            theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - acos(dist_J2_J5_xy/dist_J2_J5)
+            theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - atan2(J5_2_z, dist_J2_J5_xy)
            
             # 5. theta3 calc
             theta3 = pi/2 - atan2(sqrt(1 - ((dist_J2_J5**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
