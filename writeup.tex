@@ -326,12 +326,60 @@ Because all side lengths of the triangle $abc$ are known, $\gamma$ can be found 
 \[\theta _3 = \frac{\pi}{2} - \delta - \gamma\]
 
 \subsubsection{Inverse Orientation}
+Once the inverse position is solved the inverse orientation can be solved. The overall orientation is known based on the roll, pitch, and yaw Euler angles that are input to the inverse kinematics server. Since the first three joint angles are known, the last three joint angles must account for the difference in orientation between the first three joints and the total orientation.
+The total orientaion is found like so:
+\[R_{total} = rot_z(yaw) * rot_y(pitch) * rot_x(roll)\]
+Where rot\_z, y, and x are the rotation matrices about the listed axis.
+\[
+\begin{split} R_{total} = \\
+& \begin{bmatrix}
+    \cos(yaw) & -\sin(yaw) & 0 \\
+    \sin(yaw) & \cos(yaw) & 0 \\
+    0 & 0 & 1
+\end{bmatrix}
+* \\
+& \begin{bmatrix}
+    \cos(pitch) & 0 & sin(pitch) \\
+    0 & 1 & 0 \\
+    -\sin(pitch) & 0 & cos(pitch)
+\end{bmatrix}
+* \\
+& \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & \cos(roll) & -\sin(roll) \\
+    0 & \sin(roll) & \cos(roll)
+\end{bmatrix}
+\end{split}
+\]
+The orientation after the first three joints can be found by substituting the joint angles into the rotation portion of the Denavit-Hartenberg transforms for the first three frames:
+\[R^0_3 = R^0_1(\theta_1) * R^1_2(\theta_2) * R^2_3(\theta_3)\]
+\[
+\begin{split} R^0_3 = \\
+& \begin{bmatrix}
+    \cos(\theta _1) & -\sin(\theta _1) & 0 \\
+    \sin(\theta _1)\cos(\alpha _{0}) & \cos(\theta _1)\cos(\alpha _{0}) & -\sin(\alpha _{0}) \\
+    \sin(\theta _1)\sin(\alpha _{0}) & \cos(\theta _1)\sin(\alpha _{0}) & \cos(\alpha _{0}) \\
+\end{bmatrix}
+* \\
+& \begin{bmatrix}
+    \cos(\theta _2) & -\sin(\theta _2) & 0 \\
+    \sin(\theta _2)\cos(\alpha _{1}) & \cos(\theta _2)\cos(\alpha _{1}) & -\sin(\alpha _{1}) \\
+    \sin(\theta _2)\sin(\alpha _{1}) & \cos(\theta _2)\sin(\alpha _{1}) & \cos(\alpha _{1}) \\
+\end{bmatrix}
+* \\
+& \begin{bmatrix}
+    \cos(\theta _3) & -\sin(\theta _3) & 0 \\
+    \sin(\theta _3)\cos(\alpha _{2}) & \cos(\theta _3)\cos(\alpha _{2}) & -\sin(\alpha _{2}) \\
+    \sin(\theta _3)\sin(\alpha _{2}) & \cos(\theta _3)\sin(\alpha _{2}) & \cos(\alpha _{2}) \\
+\end{bmatrix}
+\end{split}
+\]
+Because of the difference in orientation between the DH and URDF frames, a correction must be applied to $R^0_3$ similarly to the correction applied when calculating the total transform.
+The orientation of the last three joints can be found by taking the difference between the total orientation and the orientation of the first three joints:
+\[R^3_6 = (R^0_3)^{-1} * R_{total}\]
 
-\paragraph{Joint 4 - $\theta _4$}
-
-\paragraph{Joint 5 - $\theta _5$}
-
-\paragraph{Joint 6 - $\theta _6$}
+\paragraph{Joints 4, 5, \& 6 - $\theta _4, \theta _5, \theta _6$}
+Once the necessary orientation of the last three joints is known, $\theta _4, \theta _5,$ and $\theta _6$ can be found by transforming the orientation into Euler angles. These can be calculated by hand but for this project the euler\_from\_matrix() function from the TF package was used to find the Euler angles.
 
 \section{Project Implementation}
 
@@ -340,8 +388,5 @@ Because all side lengths of the triangle $abc$ are known, $\gamma$ can be found 
 
 Here I'll talk about the code, what techniques I used, what worked and why, where the implementation might fail and how I might improve it if I were going to pursue this project further.  
 
-
-And just for fun, another example image:
-% ![alt text][image3]
 
 \end{document}
