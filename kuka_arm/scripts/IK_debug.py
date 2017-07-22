@@ -183,16 +183,21 @@ def test_code(test_case):
         l2_3 = a2
         l2_3 = l2_3.subs(s)
         # b = l3 + l4 w/ adjustment
+        # labeled as d in writeup
         l3_4 = 0.96 # from URDF file
+        # labeled as e in writeup
         l4_5 = 0.54 # from URDF file
+        # labeled as a3 in writeup
         l3_4_offset = abs(a3)
         l3_4_offset = l3_4_offset.subs(s)
+        # labeled as B in writeup
         l3_4_angle = pi - asin(l3_4_offset / l3_4)
         # Cosine rule
+        # b = sqrt(d^2 + e^2 - 2de * cos(B)
         dist3_5 = sqrt(l3_4**2 + l4_5**2 - 2*l3_4*l4_5*cos(l3_4_angle))
             
         # 1. Find total rotation matrix from roll-pitch-yaw data
-        R_total = simplify(rot_x(roll) * rot_y(pitch) * rot_z(yaw))
+        R_total = simplify(rot_z(yaw) * rot_y(pitch) * rot_x(roll))
 
         # 2. Find wrist center position using the end effector position and orientation
             # d6 = 0
@@ -223,9 +228,12 @@ def test_code(test_case):
         J5_x = w_c[0,0]
         J5_y = w_c[1,0]
         J5_z = w_c[2,0]
+        # labeled g in writeup
         J5_2_z = J5_z - J2_z
 
+        # labeled c in writeup
         dist_J2_J5 = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2 + (J5_z - J2_z)**2)
+        # labeled f in writeup
         dist_J2_J5_xy = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2)
 
         acos_innards = (dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5)
@@ -257,7 +265,7 @@ def test_code(test_case):
         # 7. Find alpha, beta, gamma euler angles as done in lesson 2 part 8.
 
         # Method using euler_from_matrix assuming an xyx rotation rather than an xyz rotation
-        alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6.tolist(), 'rxyx')
+        alpha, beta, gamma = tf.transformations.euler_from_matrix(R3_6.tolist(), 'ryzy')
         theta4 = alpha
         theta5 = beta
         theta6 = gamma
@@ -340,6 +348,6 @@ def test_code(test_case):
 
 if __name__ == "__main__":
     # Change test case number for different scenarios
-    test_case_number = 1
+    test_case_number = 2
 
 test_code(test_cases[test_case_number])
