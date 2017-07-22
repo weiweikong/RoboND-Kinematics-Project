@@ -237,19 +237,14 @@ def test_code(test_case):
         dist_J2_J5_xy = sqrt((J5_x - J2_x)**2 + (J5_y - J2_y)**2)
 
         acos_innards = (dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5)
-        print("acos innards = ", acos_innards)
         # theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - acos(dist_J2_J5_xy/dist_J2_J5) 
         theta2 = pi/2 - (acos((dist3_5**2 - l2_3**2 - dist_J2_J5**2)/(-2*l2_3*dist_J2_J5))) - atan2(J5_2_z, dist_J2_J5_xy)
-        print("theta2 = ", theta2)
            
         # 5. theta3 calc
-        theta3 = pi/2 - atan2(sqrt(1 - ((dist_J2_J5**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
-                                (dist_J2_J5**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
-        print("theta3 = ", theta3)
-
-        # Choose other theta3 calc
-        # theta3_b = pi/2 - atan2(-sqrt(1 - ((xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))),
-        #                          (xc**2 + yc**2 - l2_3**2 - dist3_5**2) / (-2*l2_3*dist3_5))
+        # theta3 = pi/2 - delta - gamma
+        # delta = asin(a3/b)
+        # gamma = acos((c^2 - a^2 - b^2)/(-2ab))
+        theta3 = pi/2 - asin(l3_4_offset/dist3_5) - acos((dist_J2_J5**2 - l2_3**2 - dist3_5**2)/(-2*l2_3*dist3_5))
 		
         # 6. Find R3_6 from orientation data
 
@@ -348,6 +343,6 @@ def test_code(test_case):
 
 if __name__ == "__main__":
     # Change test case number for different scenarios
-    test_case_number = 2
+    test_case_number = 3
 
 test_code(test_cases[test_case_number])
