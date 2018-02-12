@@ -164,6 +164,47 @@ You're reading it!
 
 - From `base_link` to `gripper_link`, as the previous mentioned, it could be calculated by a chain of transformation matrices.
 
+  ```
+  T0_1 = [[cos(q1), -sin(q1), 0, 0],
+         [sin(q1), cos(q1), 0, 0],
+         [0, 0, 1, 0.75],
+         [0, 0, 0, 1]]
+     
+  T1_2 = [[cos(q2 - 0.5*pi), -sin(q2 - 0.5*pi), 0, 0.35],
+         [0, 0, 1, 0],
+         [-sin(q2 - 0.5*pi), -cos(q2 - 0.5*pi), 0, 0],
+         [0, 0, 0, 1]]
+     
+  T2_3 = [[cos(q3), -sin(q3), 0, 1.25],
+         [sin(q3), cos(q3), 0, 0],
+         [0, 0, 1, 0],
+         [0, 0, 0, 1]]
+      
+  T3_4 = [[cos(q4), -sin(q4), 0, -0.054],
+          [0, 0, 1, 1.5],
+          [-sin(q4), -cos(q4), 0, 0],
+          [0, 0, 0, 1]]
+      
+   T4_5 = [[cos(q5), -sin(q5), 0, 0],
+          [0, 0, -1, 0],
+          [sin(q5), cos(q5), 0, 0],
+          [0, 0, 0, 1]]
+      
+   T5_6 = [[cos(q6), -sin(q6), 0, 0],
+          [0, 0, 1, 0],
+          [-sin(q6), -cos(q6), 0, 0],
+          [0, 0, 0, 1]]
+      
+   T6_7 = [[1, 0, 0, a6],
+          [0, 1, 0, 0],
+          [0, 0, 1, 0.303],
+          [0, 0, 0, 1]
+  ```
+
+  ​
+
+- The final matrix can be calculated by
+
   ```python
   self.TBASE_TCP = self.T0_1 * self.T1_2 * self.T2_3 * self.T3_4 * self.T4_5 * self.T5_6 * self.T6_TCP 
   ```
